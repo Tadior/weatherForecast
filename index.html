@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="style.css">
+   <title>Wheather Dashboard</title>
+</head>
+<body>
+   <header class="header">
+      <div class="header-container">
+         <nav class="header-nav">
+            <ul class="header-nav__items header-list">
+               <li class="header-list__item header-list__item--logo">
+                  <a href="">
+                     <img src="img/logo.png" alt="logo" class="header-list__logo">
+                  </a>
+               </li>
+               <li class="header-list__item header-list__item--search">
+                  <input type="search" name="" id="" placeholder="Поиск по городу">
+               </li>
+               <li class="header-list__item header-list__item--settings header-settings">
+                  <div class="header-settings__item header-settings__item--language">
+                     <div class="header-settings__item-wrapper">
+                        <img src="" alt="" class="header-settings__picture">
+                        <div class="header-settings__language">RU</div>
+                     </div>
+                  </div>
+                  <div class="header-settings__item header-settings__item-unit">
+                     °C
+                  </div>
+               </li>
+            </ul>
+         </nav>
+      </div>
+   </header>
+   <main class="main">
+      <div class="container">
+         <div class="wheather wheathet-container">
+            <div class="wheather__card card">
+               <div class="card__title">
+                  <div class="card__temperature">
+                     Температура: <span id="card-temperature"></span>
+                  </div>
+                  <div class="card__picture">
+                     <img src="" alt="" class="wheather-picture" id='wheather-picture'>
+                  </div>
+                  <div class="card-table">
+                     <div class="card-table__item card-item" data-type="cloudcover">
+                        <div class="card-item__label">Облачность</div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="feelslike">
+                        <div class="card-item__label">Ощющается как</div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="humidity">
+                        <div class="card-item__label">Влажность</div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="is_day">
+                        <div class="card-item__label">Время суток :</div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="pressure">
+                        <div class="card-item__label">Давление</div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="visibility">
+                        <div class="card-item__label">Видимость</div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="wind_degree">
+                        <div class="card-item__label"></div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="wind_dir">
+                        <div class="card-item__label"></div>
+                        <div class="card-item__value"></div>
+                     </div>
+                     <div class="card-table__item card-item" data-type="wind_speed">
+                        <div class="card-item__label">Скорость ветра</div>
+                        <div class="card-item__value"></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <footer>
+         <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+      </footer>
+   </main>
+   <script src='script.js'></script>
+</body>
+</html>

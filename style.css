@@ -1,0 +1,50 @@
+@import url(node_modules/normalize.css/normalize.css);
+.container {
+   max-width: 1000px;
+   margin: 0 auto;
+   padding: 0 10px;
+   background-color: thistle;
+}
+.content {
+   height: 100vh;
+}
+.main {
+}
+.container {
+}
+.wheather {
+/*display: flex;*/
+
+}
+.wheather-card {
+   flex: 1 1 auto;
+   background: red;
+}
+.wheathet-container {
+}
+.card {
+
+
+}
+.card__title {
+
+}
+.card__temperature {
+
+}
+
+.card-table {
+   display: flex;
+   flex-wrap: wrap;
+}
+.card-table__item {
+   padding: 10px 16px;
+   border-top: 1px solid #dedede;
+   flex: 1 1 46%;
+}
+.card-table__item:nth-child(odd) {
+   margin-right: 6px;
+}
+.card-table__item:nth-child(2n) {
+   margin-left: 6px;
+}
