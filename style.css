@@ -1,18 +1,131 @@
 @import url(node_modules/normalize.css/normalize.css);
+* {
+   box-sizing: border-box;
+   padding: 0;
+   margin: 0;
+}
+body {
+   color: #fff
+}
+ul li {
+   list-style: none;
+}
+button {
+   background: transparent;
+   border: none;
+   color: #fff;
+   outline: none;
+}
+
+.header {
+   background-color: rgb(13, 36, 86);
+}
+.header-container {
+   margin: 0 auto;
+   padding: 11px;
+   max-width: 1280px;
+}
+.header-nav {
+
+}
+.header-nav__items{
+
+}
+.header-list {
+   display: flex;
+   align-items: center;
+}
+.header-list__item--logo{
+   
+}
+.header-list__item {
+   /*flex: 0 1 auto;*/
+}
+.header-list__logo{
+   max-width: 60px;
+}
+.header-list__item--search{
+   flex: 1 1 auto;
+   text-align: center;
+}
+.header-list__item--search input {
+   margin: 0 auto;
+   width: 100%;
+   max-width: 380px;
+   padding: 5px 6px;
+   border: 0;
+   border-radius: 20px;
+   background: hsla(0,0%,100%,.2);
+   text-align: center;
+}
+.header-list__item--settings{}
+.header-settings {
+   display: flex;
+   align-items: center;
+   cursor: pointer;
+   transition: 0.5s ease all;
+   padding: 2px 8px;
+   /*border: none;*/
+}
+.header-settings:focus {
+   outline: 5px auto #1b4de4;
+}
+.header-settings__item--language{
+   
+}
+.header-settings__item-wrapper{
+   display: flex;
+   align-items: center;
+}
+.header-settings__picture{
+   max-width: 40px;
+   width: 100%;
+}
+.header-settings__language{}
+.header-settings--unit {
+   padding: 0 10px;
+}
+.header-settings__item-unit{
+   border-left: 1px solid;
+}
+.header-settings__button {
+   position: relative;
+   width: 20px;
+   height: 20px;
+   background-color: transparent;
+   border: none;
+   cursor: pointer;
+}
+.header-settings__button:before {
+   content: '';
+   left: 0;
+   top: 5px;
+   position: absolute;
+   border: 10px solid transparent; /* Прозрачные границы */
+   border-top: 10px solid #fff; /* Добавляем треугольник */
+}
+
 .container {
    max-width: 1000px;
    margin: 0 auto;
    padding: 0 10px;
    background-color: thistle;
 }
-.content {
+/*.content {
    height: 100vh;
+}*/
+.content {
+   flex: 1 1 auto;
 }
 .main {
+   display: flex;
+   flex-direction: column;
+   /*justify-content: space-between;*/
 }
 .container {
 }
 .wheather {
+   flex: 1 1 auto;
 /*display: flex;*/
 
 }
