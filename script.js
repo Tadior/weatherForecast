@@ -7,6 +7,7 @@ const urlForecast = 'forecast';
 const apiKey = '?access_key=f52842a7338b67b60edf8e1d1ba9f3d9';
 let currentLocation = '&query=Samara';
 const cardItems = Array.from(document.querySelectorAll('.card-item'));
+const settingsButton = document.getElementById('header-settings');
 
 const cardTypes = cardItems.map(function(item) {
    return item.getAttribute('data-type');
@@ -51,5 +52,12 @@ function general(callback) {
    });
 }  
 general(getResponse);
+
+function settingsMenu() {
+   const menu = document.getElementById('settings-menu');
+   menu.classList.toggle('show');
+   this.classList.toggle('header-settings--pressed')
+}
+settingsButton.addEventListener('click', settingsMenu);
 
 

@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
    <meta charset="UTF-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <link rel="stylesheet" href="style.css">
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Pushster&display=swap" rel="stylesheet">
    <title>Wheather Dashboard</title>
 </head>
+
 <body>
    <header class="header">
       <div class="header-container">
@@ -17,10 +22,15 @@
                      <img src="img/logo.png" alt="logo" class="header-list__logo">
                   </a>
                </li>
-               <li class="header-list__item header-list__item--search">
-                  <input type="search" name="" id="" placeholder="Поиск по городу">
+               <li class="header-list__item header-list__item--search header-input">
+                  <div class="header-input__wrapper">
+                     <input class="input-city" type="search" name="" id="" placeholder="Поиск по городу">
+                     <button class="search-btn">
+                        <img src="img/loop.png" alt="loop">
+                     </button>
+                  </div>
                </li>
-               <button class="header-list__item header-list__item--settings header-settings">
+               <button id="header-settings" class="header-list__item header-list__item--settings header-settings">
                   <div class="header-settings__item header-settings__item--language">
                      <div class="header-settings__item-wrapper">
                         <img src="img/earth.png" alt="" class="header-settings__picture">
@@ -31,25 +41,57 @@
                      °C
                   </div>
                   <div class="header-settings__button">
-                     
+
                   </div>
                </button>
             </ul>
          </nav>
       </div>
+      <div id="settings-menu" class="settings-menu">
+         <div class="header-container">
+            <div class="settings-menu__unit">
+               <div class="settings-menu-headline">
+                  Единицы измерения
+               </div>
+               <div class="settings-menu__wrapper">
+                  <button class="settings-item settings-item--unit settings-unit settings--active">°C</button>
+                  <button class="settings-item settings-item--unit settings-unit">°F</button>
+               </div>
+            </div>
+            <div class="settings-menu__language">
+               <div class="settings-menu-headline">
+                  Язык интерфейса
+               </div>
+               <div class="settings-menu__wrapper">
+                  <button class="settings-item settings-item--language settings-language settings--active" data-language='Russian'>Русский</button>
+                  <button class="settings-item settings-item--language settings-language" data-language='English'>Английский</button>
+               </div>
+               
+            </div>
+         </div>
+      </div>
    </header>
    <main class="main">
       <div class="content">
          <div class="container">
-         <div class="wheather wheathet-container">
-            <div class="wheather__card card">
-               <div class="card__title">
-                  <div class="card__temperature">
-                     Температура: <span id="card-temperature"></span>
+            <div class="wheather wheathet-container">
+               <div class="wheather__card card">
+                  <div class="card__title">
+                     Погода на сегодня:
+                     <span class="card-city" class="card-city"></span>
                   </div>
-                  <div class="card__picture">
-                     <img src="" alt="" class="wheather-picture" id='wheather-picture'>
+                  <div class="card__main">
+                     <div class="card__temperature">
+                        <span id="card-temperature"></span>
+                        <div class="card__temperature--feels">
+                           Ощущается как
+                        </div>
+                     </div>
+                     <div class="card__picture">
+                        <img src="img/rainy.png" alt="" class="wheather-picture" id='wheather-picture'>
+                     </div>
                   </div>
+
                   <div class="card-table">
                      <div class="card-table__item card-item" data-type="cloudcover">
                         <div class="card-item__label">Облачность</div>
@@ -92,12 +134,13 @@
             </div>
          </div>
       </div>
-      </div>
-      
+
       <footer>
-         <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+         <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a
+               href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
       </footer>
    </main>
    <script src='script.js'></script>
 </body>
+
 </html>
