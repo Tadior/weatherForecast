@@ -5,7 +5,7 @@ const urlCurrent = 'current';
 const urlHistorical = 'historical';
 const urlForecast = 'forecast';
 const apiKey = '?access_key=f52842a7338b67b60edf8e1d1ba9f3d9';
-let currentLocation = '&query=Samara';
+let currentLocation = '&query=Moscow';
 const cardItems = Array.from(document.querySelectorAll('.card-item'));
 const settingsButton = document.getElementById('header-settings');
 
@@ -17,12 +17,14 @@ function getResponse(url) {
    return fetch(url).then((response) => {return response.json()});
 }
 
-function general(callback) {
-   callback(baseUrl + urlCurrent + apiKey + currentLocation).then((responseValue) => {
+function general() {
+   getResponse(baseUrl + urlCurrent + apiKey + currentLocation).then((responseValue) => {
       const data = responseValue;
 
       console.log(data)
       const dataCurrent = data.current;
+
+      const weatherPicture = document.querySelector('.weather-picture');
 
       function setInfoCards(info) {
          for (let item in info) {
@@ -33,15 +35,20 @@ function general(callback) {
             }
          }
       }
+
       function setTemperature(item, value) {
          item.textContent = value;
       }
 
       function setWheatherPicture(info) {
-         const compare = info.pop();
+         console.log(info)
+         let weather = info.pop().toLowerCase();
+         if (weather.includes(' ')) weather = weather[0].split(' ');
+         console.log(weather)
+         weatherPicture.src = `img/weather-icons/${weather}.png`;
          //switch(compare) {
-         //   case 'Clear' :
-         //      alert(compare);
+         //   case 'Overcast' :
+         //      weatherPicture.src = 'img/weather-icons/overcast.png';
          //      break;
          //}
       }
@@ -51,7 +58,7 @@ function general(callback) {
       setWheatherPicture(data.current.weather_descriptions);
    });
 }  
-general(getResponse);
+general();
 
 function settingsMenu() {
    const menu = document.getElementById('settings-menu');
