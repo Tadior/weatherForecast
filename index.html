@@ -9,7 +9,7 @@
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
    <link href="https://fonts.googleapis.com/css2?family=Pushster&display=swap" rel="stylesheet">
-   <title>Wheather Dashboard</title>
+   <title>weather Dashboard</title>
 </head>
 
 <body>
@@ -74,11 +74,17 @@
    <main class="main">
       <div class="content">
          <div class="container">
-            <div class="wheather wheathet-container">
-               <div class="wheather__card card">
+            <div class="weather weather-container">
+               <div class="weather__card card">
                   <div class="card__title">
-                     Погода на сегодня:
-                     <span class="card-city" class="card-city"></span>
+                     Погода:
+                     <span id="card-city" class="card-city"></span>
+                  </div>
+                  <div class="card__status">
+                     По состоянию на 
+                     <span id="card-status" class="card-status">
+
+                     </span>
                   </div>
                   <div class="card__main">
                      <div class="card__temperature">
@@ -88,7 +94,7 @@
                         </div>
                      </div>
                      <div class="card__picture">
-                        <img src="img/rainy.png" alt="" class="wheather-picture" id='wheather-picture'>
+                        <img src="img/rainy.png" alt="" class="weather-picture" id='weather-picture'>
                      </div>
                   </div>
 
@@ -106,7 +112,7 @@
                         <div class="card-item__value"></div>
                      </div>
                      <div class="card-table__item card-item" data-type="is_day">
-                        <div class="card-item__label">Время суток :</div>
+                        <div class="card-item__label">Время суток </div>
                         <div class="card-item__value"></div>
                      </div>
                      <div class="card-table__item card-item" data-type="pressure">
@@ -135,7 +141,7 @@
          </div>
       </div>
 
-      <footer>
+      <footer class='footer'>
          <div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a
                href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
       </footer>

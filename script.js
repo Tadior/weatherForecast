@@ -56,7 +56,7 @@ general(getResponse);
 function settingsMenu() {
    const menu = document.getElementById('settings-menu');
    menu.classList.toggle('show');
-   this.classList.toggle('header-settings--pressed')
+   this.classList.toggle('header-settings--pressed');
 }
 settingsButton.addEventListener('click', settingsMenu);
 

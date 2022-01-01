@@ -21,6 +21,7 @@ button {
 }
 
 .header {
+   position: relative;
    background-color: rgb(13, 36, 86);
 }
 .header-container {
@@ -41,9 +42,7 @@ button {
 .header-list__item--logo{
    
 }
-.header-list__item {
-   /*flex: 0 1 auto;*/
-}
+
 .header-list__logo{
    max-width: 60px;
 }
@@ -115,7 +114,11 @@ button {
    transform: rotate(180deg);
 }
 .settings-menu {
-   /*display: none;*/
+   position: absolute;
+   right: 0;
+   top: 0;
+   visibility: hidden;
+   width: 100%;
    background-color: #161718;
 }
 .settings-menu__wrapper {
@@ -149,45 +152,47 @@ button {
 }
 
 .show {
-   display: block;
+   top: 100%;
+   visibility: visible;
 }
 
 .container {
    max-width: 1000px;
    margin: 0 auto;
    padding: 0 10px;
-   /*background-color: thistle;*/
 }
-/*.content {
-   height: 100vh;
-}*/
 .content {
+   margin-top: 15px;
    flex: 1 1 auto;
 }
 .main {
    display: flex;
    flex-direction: column;
-   /*justify-content: space-between;*/
+   background-image: linear-gradient(rgb(19, 38, 89) 9%, rgb(110, 51, 112));
+   height: calc(100vh - 85px);
 }
 .container {
 }
-.wheather {
+.weather {
    flex: 1 1 auto;
 /*display: flex;*/
 
 }
-.wheather-card {
+.weather-card {
    flex: 1 1 auto;
    background: red;
 }
 .wheathet-container {
 }
-.wheather-picture {
+.weather-picture {
    max-width: 100px;
    width: 100%;
 }
 .card {
-   background-color: #161718;
+   /*background-color: #161718;*/
+   background: transparent;
+   border: 1px solid;
+   border-radius: 10px;
 }
 .card__main {
    display: flex;
@@ -199,9 +204,18 @@ button {
    font-weight: 600;
    font-size: 1.25rem;
 }
+.card__status {
+   padding: 0 16px;
+   font-weight: 400;
+   font-size: 1.1rem;
+}
 .card__temperature span{
    font-weight: 500;
    font-size: 6rem;
+}
+.card-item {
+   display: flex;
+   justify-content: space-between;
 }
 .card-item__label {
    font-size: 1rem;
@@ -244,4 +258,7 @@ button {
 }
 .card-table__item:nth-child(2n) {
    margin-left: 6px;
+}
+.footer {
+   text-align: center;
 }
