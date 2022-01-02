@@ -1,11 +1,14 @@
 'use strict';
 
-const baseUrl = 'http://api.weatherstack.com/';
-const urlCurrent = 'current';
-const urlHistorical = 'historical';
-const urlForecast = 'forecast';
-const apiKey = '?access_key=f52842a7338b67b60edf8e1d1ba9f3d9';
-let currentLocation = '&query=Moscow';
+const baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
+//const urlCurrent = 'current';
+//const urlHistorical = 'historical';
+//const urlForecast = 'forecast';
+const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
+const byCity = '?q=';
+let currentLocation = 'Moscow';
+const metric = '&units=metric'
+
 const cardItems = Array.from(document.querySelectorAll('.card-item'));
 const settingsButton = document.getElementById('header-settings');
 
@@ -18,22 +21,31 @@ function getResponse(url) {
 }
 
 function general() {
-   getResponse(baseUrl + urlCurrent + apiKey + currentLocation).then((responseValue) => {
+   getResponse(baseUrl + byCity + currentLocation + metric + apiKey).then((responseValue) => {
       const data = responseValue;
 
       console.log(data)
-      const dataCurrent = data.current;
+      const dataMain = data.main;
+      const dataWeather = data.weather[0];
 
       const weatherPicture = document.querySelector('.weather-picture');
 
-      function setInfoCards(info) {
+      function setInfo(info) {
+
          for (let item in info) {
             for (let i of cardItems) {
                if (i.getAttribute('data-type') === item) {
-                  i.querySelector('.card-item__value').textContent += info[item]
+                  console.log(item)
+                  i.querySelector('.card-item__value').textContent += info[item];
                }
             }
          }
+         document.getElementById('card-status').textContent = getCurrentTime();
+
+         setTemperature(document.querySelector('#card-temperature'), dataMain.temp);
+         setTemperature(document.querySelector('#card-temperature'), dataMain.temp);
+         setWheatherPicture(dataWeather);
+         
       }
 
       function setTemperature(item, value) {
@@ -41,21 +53,20 @@ function general() {
       }
 
       function setWheatherPicture(info) {
-         console.log(info)
-         let weather = info.pop().toLowerCase();
-         if (weather.includes(' ')) weather = weather[0].split(' ');
-         console.log(weather)
-         weatherPicture.src = `img/weather-icons/${weather}.png`;
-         //switch(compare) {
-         //   case 'Overcast' :
-         //      weatherPicture.src = 'img/weather-icons/overcast.png';
-         //      break;
-         //}
+         weatherPicture.src = `http://openweathermap.org/img/wn/${info.icon}.png`;
       }
-      setInfoCards(dataCurrent);
 
-      setTemperature(document.querySelector('#card-temperature'), data.current.temperature);
-      setWheatherPicture(data.current.weather_descriptions);
+      function getCurrentTime() {
+         const date = new Date();
+         let out = `${date.getHours()}:${date.getMinutes()}`;
+         return out;
+      }
+      function setDay(time) {
+         
+      }
+      setInfo(dataMain);
+      //console.log(new Date().getFullYear())
+      //console.log(new Date().())
    });
 }  
 general();
