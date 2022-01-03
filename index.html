@@ -24,7 +24,7 @@
                </li>
                <li class="header-list__item header-list__item--search header-input">
                   <div class="header-input__wrapper">
-                     <input class="input-city" type="search" name="" id="" placeholder="Поиск по городу">
+                     <input class="input-city" type="search" name="" id="search--city" placeholder="Поиск по городу">
                      <button class="search-btn">
                         <img src="img/loop.png" alt="loop">
                      </button>
@@ -89,9 +89,6 @@
                   <div class="card__main">
                      <div class="card__temperature">
                         <span id="card-temperature"></span>
-                        <div class="card__temperature--feels">
-                           Ощущается как
-                        </div>
                      </div>
                      <div class="card__picture">
                         <img src="img/rainy.png" alt="" class="weather-picture" id='weather-picture'>
@@ -101,10 +98,6 @@
                   <div class="card-table">
                      <div class="card-table__item card-item" data-type="temp">
                         <div class="card-item__label">Температура</div>
-                        <div class="card-item__value"></div>
-                     </div>
-                     <div class="card-table__item card-item" data-type="cloudcover">
-                        <div class="card-item__label">Облачность</div>
                         <div class="card-item__value"></div>
                      </div>
                      <div class="card-table__item card-item" data-type="feels_like">
@@ -123,8 +116,8 @@
                         <div class="card-item__label">Давление</div>
                         <div class="card-item__value"></div>
                      </div>
-                     <div class="card-table__item card-item" data-type="visibility">
-                        <div class="card-item__label">Видимость</div>
+                     <div class="card-table__item card-item" data-type="sea_level">
+                        <div class="card-item__label">Уровень моря</div>
                         <div class="card-item__value"></div>
                      </div>
                      <div class="card-table__item card-item" data-type="temp_max">
@@ -133,10 +126,6 @@
                      </div>
                      <div class="card-table__item card-item" data-type="temp_min">
                         <div class="card-item__label">Минимальная температура</div>
-                        <div class="card-item__value"></div>
-                     </div>
-                     <div class="card-table__item card-item" data-type="wind_speed">
-                        <div class="card-item__label">Скорость ветра</div>
                         <div class="card-item__value"></div>
                      </div>
                   </div>

@@ -4,10 +4,10 @@ const baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
 //const urlCurrent = 'current';
 //const urlHistorical = 'historical';
 //const urlForecast = 'forecast';
-const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
+const apiKey = '';
 const byCity = '?q=';
 let currentLocation = 'Moscow';
-const metric = '&units=metric'
+const metric = '&units=metric';
 
 const cardItems = Array.from(document.querySelectorAll('.card-item'));
 const settingsButton = document.getElementById('header-settings');
@@ -20,13 +20,17 @@ function getResponse(url) {
    return fetch(url).then((response) => {return response.json()});
 }
 
-function general() {
-   getResponse(baseUrl + byCity + currentLocation + metric + apiKey).then((responseValue) => {
+function general(requestUrl) {
+   getResponse(requestUrl).then((responseValue) => {
       const data = responseValue;
-
+      if (!data.main) {
+         alert(data.message);
+         return false;
+      }
       console.log(data)
       const dataMain = data.main;
       const dataWeather = data.weather[0];
+      const timezone = data.timezone;
 
       const weatherPicture = document.querySelector('.weather-picture');
 
@@ -35,20 +39,19 @@ function general() {
          for (let item in info) {
             for (let i of cardItems) {
                if (i.getAttribute('data-type') === item) {
-                  console.log(item)
-                  i.querySelector('.card-item__value').textContent += info[item];
+                  i.querySelector('.card-item__value').textContent = info[item];
                }
             }
          }
-         document.getElementById('card-status').textContent = getCurrentTime();
 
-         setTemperature(document.querySelector('#card-temperature'), dataMain.temp);
-         setTemperature(document.querySelector('#card-temperature'), dataMain.temp);
+         setExtraInfo(document.querySelector('#card-temperature'), dataMain.temp);
+         setExtraInfo(document.querySelector('#card-city'), data.name);
+         setExtraInfo(document.getElementById('card-status'), getCurrentTime(timezone));
          setWheatherPicture(dataWeather);
-         
+         setDay(getCurrentTime(timezone));
       }
 
-      function setTemperature(item, value) {
+      function setExtraInfo(item, value) {
          item.textContent = value;
       }
 
@@ -62,14 +65,22 @@ function general() {
          return out;
       }
       function setDay(time) {
-         
+         const timeArr = time.split(':');
+         const hours = timeArr[0];
+         const element = document.querySelector("[data-type='is_day']");
+         let out = '';
+         if (hours >= 0 && hours < 6 ) out = 'Ночь';
+         if (hours >= 6 && hours < 12 ) out = 'Утро';
+         if (hours >= 12 && hours < 18 ) out = 'День';
+         if (hours >= 18 && hours < 24 ) out = 'Вечер';
+         console.log(hours)
+         element.querySelector('.card-item__value').textContent = out;
       }
+
       setInfo(dataMain);
-      //console.log(new Date().getFullYear())
-      //console.log(new Date().())
    });
 }  
-general();
+general(baseUrl + byCity + currentLocation + metric + apiKey);
 
 function settingsMenu() {
    const menu = document.getElementById('settings-menu');
@@ -77,5 +88,17 @@ function settingsMenu() {
    this.classList.toggle('header-settings--pressed');
 }
 settingsButton.addEventListener('click', settingsMenu);
+
+function searchByCity() {
+   const inputCity = document.getElementById('search--city');
+   currentLocation = inputCity.value;
+   general(baseUrl + byCity + currentLocation + metric + apiKey);
+}
+document.querySelector('.search-btn').addEventListener('click',searchByCity)
+document.getElementById('search--city').addEventListener('keypress',(event) => {
+   if (event.charCode == 13) searchByCity();
+});
+
+
 
 
