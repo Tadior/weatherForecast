@@ -34,10 +34,10 @@
                   <div class="header-settings__item header-settings__item--language">
                      <div class="header-settings__item-wrapper">
                         <img src="img/earth.png" alt="" class="header-settings__picture">
-                        <div class="header-settings__language header-settings--unit">RU</div>
+                        <div id='language' class="header-settings__language header-settings--unit">RU</div>
                      </div>
                   </div>
-                  <div class="header-settings__item header-settings__item-unit header-settings--unit">
+                  <div id="unit" class="header-settings__item header-settings__item-unit header-settings--unit">
                      °C
                   </div>
                   <div class="header-settings__button">
@@ -54,8 +54,8 @@
                   Единицы измерения
                </div>
                <div class="settings-menu__wrapper">
-                  <button class="settings-item settings-item--unit settings-unit settings--active">°C</button>
-                  <button class="settings-item settings-item--unit settings-unit">°F</button>
+                  <button id="unitBtn" class="settings-item settings-item--unit settings-unit settings--active" data-unit='C'>°C</button>
+                  <button id="unitBtn" class="settings-item settings-item--unit settings-unit" data-unit='F'>°F</button>
                </div>
             </div>
             <div class="settings-menu__language">

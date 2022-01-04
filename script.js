@@ -4,10 +4,11 @@ const baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
 //const urlCurrent = 'current';
 //const urlHistorical = 'historical';
 //const urlForecast = 'forecast';
-const apiKey = '';
+const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
 const byCity = '?q=';
 let currentLocation = 'Moscow';
 const metric = '&units=metric';
+const imperial = '&units=imperial';
 
 const cardItems = Array.from(document.querySelectorAll('.card-item'));
 const settingsButton = document.getElementById('header-settings');
@@ -15,6 +16,8 @@ const settingsButton = document.getElementById('header-settings');
 const cardTypes = cardItems.map(function(item) {
    return item.getAttribute('data-type');
 });
+
+const menu = document.getElementById('settings-menu');
 
 function getResponse(url) {
    return fetch(url).then((response) => {return response.json()});
@@ -30,7 +33,7 @@ function general(requestUrl) {
       console.log(data)
       const dataMain = data.main;
       const dataWeather = data.weather[0];
-      const timezone = data.timezone;
+      //const timezone = data.timezone;
 
       const weatherPicture = document.querySelector('.weather-picture');
 
@@ -46,9 +49,9 @@ function general(requestUrl) {
 
          setExtraInfo(document.querySelector('#card-temperature'), dataMain.temp);
          setExtraInfo(document.querySelector('#card-city'), data.name);
-         setExtraInfo(document.getElementById('card-status'), getCurrentTime(timezone));
+         setExtraInfo(document.getElementById('card-status'), getCurrentTime(data));
          setWheatherPicture(dataWeather);
-         setDay(getCurrentTime(timezone));
+         //setDay(getCurrentTime(data));
       }
 
       function setExtraInfo(item, value) {
@@ -59,10 +62,8 @@ function general(requestUrl) {
          weatherPicture.src = `http://openweathermap.org/img/wn/${info.icon}.png`;
       }
 
-      function getCurrentTime() {
-         const date = new Date();
-         let out = `${date.getHours()}:${date.getMinutes()}`;
-         return out;
+      function getCurrentTime(data) {
+         
       }
       function setDay(time) {
          const timeArr = time.split(':');
@@ -83,7 +84,6 @@ function general(requestUrl) {
 general(baseUrl + byCity + currentLocation + metric + apiKey);
 
 function settingsMenu() {
-   const menu = document.getElementById('settings-menu');
    menu.classList.toggle('show');
    this.classList.toggle('header-settings--pressed');
 }
@@ -97,6 +97,33 @@ function searchByCity() {
 document.querySelector('.search-btn').addEventListener('click',searchByCity)
 document.getElementById('search--city').addEventListener('keypress',(event) => {
    if (event.charCode == 13) searchByCity();
+});
+
+function switchUnit(elem) {
+   const unit = elem.getAttribute('data-unit');
+   elem.parentNode.querySelector('.settings--active').classList.remove('settings--active');
+   elem.classList.add('settings--active');
+   let unitText = '';
+   switch(unit) {
+      case 'C':
+         general(baseUrl + byCity + currentLocation + metric + apiKey);
+         unitText = '°C'
+         break;
+      case 'F': 
+         general(baseUrl + byCity + currentLocation + imperial + apiKey);
+         unitText = '°F'
+         break;
+   }
+   settingsButton.querySelector('#unit').textContent = unitText;
+}
+
+
+menu.addEventListener('click', (event) => {
+   //console.log(event.target)
+   if (event.target.getAttribute('data-unit')) {
+      switchUnit(event.target);
+   }
+   return false;
 });
 
 
