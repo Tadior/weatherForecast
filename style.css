@@ -113,6 +113,16 @@ button {
 .header-settings--pressed .header-settings__button{
    transform: rotate(180deg);
 }
+.extra-menu {
+   display: flex;
+   justify-content: space-around;
+}
+.extra-menu__item {
+   border: 1px solid #fff;
+   flex: 0 1 200px;
+   text-align: center;
+   padding: 15px 10px;
+}
 .settings-menu {
    position: absolute;
    right: 0;

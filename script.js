@@ -4,7 +4,7 @@ const baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
 //const urlCurrent = 'current';
 //const urlHistorical = 'historical';
 //const urlForecast = 'forecast';
-const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
+const apiKey = '';
 const byCity = '?q=';
 let currentLocation = 'Moscow';
 const metric = '&units=metric';
@@ -12,6 +12,7 @@ const imperial = '&units=imperial';
 
 const cardItems = Array.from(document.querySelectorAll('.card-item'));
 const settingsButton = document.getElementById('header-settings');
+const cardTemperature = document.querySelector('#card-temperature');
 
 const cardTypes = cardItems.map(function(item) {
    return item.getAttribute('data-type');
@@ -47,7 +48,7 @@ function general(requestUrl) {
             }
          }
 
-         setExtraInfo(document.querySelector('#card-temperature'), dataMain.temp);
+         setExtraInfo(cardTemperature, dataMain.temp);
          setExtraInfo(document.querySelector('#card-city'), data.name);
          setExtraInfo(document.getElementById('card-status'), getCurrentTime(data));
          setWheatherPicture(dataWeather);
@@ -60,6 +61,14 @@ function general(requestUrl) {
 
       function setWheatherPicture(info) {
          weatherPicture.src = `http://openweathermap.org/img/wn/${info.icon}.png`;
+      }
+
+      function setUnit(url) {
+         if (url.includes('metric')) {
+            cardTemperature.textContent += '°C';
+         } else {
+            cardTemperature.textContent += '°F';
+         }
       }
 
       function getCurrentTime(data) {
@@ -79,25 +88,30 @@ function general(requestUrl) {
       }
 
       setInfo(dataMain);
+      setUnit(requestUrl);
    });
 }  
 general(baseUrl + byCity + currentLocation + metric + apiKey);
 
-function settingsMenu() {
+function toggleSettingsMenu(event) {
    menu.classList.toggle('show');
-   this.classList.toggle('header-settings--pressed');
+   settingsButton.classList.toggle('header-settings--pressed'); 
 }
-settingsButton.addEventListener('click', settingsMenu);
+settingsButton.addEventListener('click', toggleSettingsMenu);
+
+
 
 function searchByCity() {
    const inputCity = document.getElementById('search--city');
    currentLocation = inputCity.value;
    general(baseUrl + byCity + currentLocation + metric + apiKey);
 }
-document.querySelector('.search-btn').addEventListener('click',searchByCity)
+document.querySelector('.search-btn').addEventListener('click',searchByCity);
 document.getElementById('search--city').addEventListener('keypress',(event) => {
    if (event.charCode == 13) searchByCity();
 });
+
+
 
 function switchUnit(elem) {
    const unit = elem.getAttribute('data-unit');
@@ -107,11 +121,11 @@ function switchUnit(elem) {
    switch(unit) {
       case 'C':
          general(baseUrl + byCity + currentLocation + metric + apiKey);
-         unitText = '°C'
+         unitText = '°C';
          break;
       case 'F': 
          general(baseUrl + byCity + currentLocation + imperial + apiKey);
-         unitText = '°F'
+         unitText = '°F';
          break;
    }
    settingsButton.querySelector('#unit').textContent = unitText;
@@ -119,13 +133,33 @@ function switchUnit(elem) {
 
 
 menu.addEventListener('click', (event) => {
-   //console.log(event.target)
    if (event.target.getAttribute('data-unit')) {
       switchUnit(event.target);
+      toggleSettingsMenu();
    }
    return false;
 });
 
+const extraButtons = document.querySelectorAll('#extra-btn');
+const extraMenu = document.getElementById('extra-menu');
+extraMenu.addEventListener('click', (event) => {
+   if(event.target.id != 'extra-btn') {
+      return false;
+   }
+
+   extraButtons.forEach(element => {
+      if (element.classList.contains('settings--active')) {
+         element.classList.remove('settings--active');
+      } else {
+         element.classList.add('settings--active');
+      }
+   });
+   switchCards();
+});
+
+function switchCards() {
+   console.log('dffs')
+}
 
 
 
