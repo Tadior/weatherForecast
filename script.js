@@ -1,11 +1,13 @@
 'use strict';
 
-const baseUrl = 'http://api.openweathermap.org/data/2.5/weather';
+const baseUrl = 'http://api.openweathermap.org/data/2.5/weather?';
+const callUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
 //const urlCurrent = 'current';
 //const urlHistorical = 'historical';
 //const urlForecast = 'forecast';
 const apiKey = '';
-const byCity = '?q=';
+const byCity = 'q=';
+const byWeek = '&exclude=daily';
 let currentLocation = 'Moscow';
 const metric = '&units=metric';
 const imperial = '&units=imperial';
@@ -154,12 +156,37 @@ extraMenu.addEventListener('click', (event) => {
          element.classList.add('settings--active');
       }
    });
-   switchCards();
+   const requestType = event.target.getAttribute('data-request');
+   switchCards(requestType);
 });
 
-function switchCards() {
-   console.log('dffs')
+function switchCards(type) {
+   switch (type) {
+      case 'day':
+         general(baseUrl + byCity + currentLocation + metric + apiKey);
+         console.log('day');
+         break;
+      case 'week':
+         const r = getResponse('https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,minutely&appid=69cbf08ca122c19f4ce91ce83efb3893');
+         r.then((data) => {
+            console.log(data)
+         })
+         //general(callUrl + currentLocation + metric + byWeek + apiKey);
+         console.log('week');
+         break;
+   }
 }
+
+function getWeatherData() {
+   navigator.geolocation.getCurrentPosition((success) => {
+      const {latitude, longitude} = success.coords;
+      getResponse(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${apiKey}`).then((response) => {
+         console.log(response);
+      })
+   });
+}
+console.log(getWeatherData())
+
 
 
 

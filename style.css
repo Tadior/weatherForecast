@@ -272,3 +272,37 @@ button {
 .footer {
    text-align: center;
 }
+.week {
+
+}
+.week__wrapper {
+   display: flex;
+}
+.week-item {
+   border: 1px solid #fff;
+   /*display: flex;*/
+   /*flex-direction: column;*/
+   /*text-align: center;*/
+   flex: 0 1 250px;
+   padding: 10px;
+}
+.week-item__day {
+   font-size: 18px;
+}
+.week-item__info {
+   /*display: flex;*/
+}
+.week-item__main-temperature {}
+.week-item__fluid {
+   /*display: flex;*/
+   /*align-items: center;*/
+}
+.week-item__day-temperature {}
+.week-item__night-temperature {}
+.week-item__picture {}
+.week-item__picture img{
+   max-width: 50px;
+}
+.week-item__info-item {
+   border-top: 1px solid #fff;
+}

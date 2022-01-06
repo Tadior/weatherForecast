@@ -48,10 +48,10 @@
          </nav>
          <nav class="header-menu">
             <ul id="extra-menu" class="header-menu__wrapper extra-menu">
-               <button id='extra-btn' class="extra-menu__item settings--active">
+               <button id='extra-btn' class="extra-menu__item settings--active" data-request='day'>
                   На день
                </button>
-               <button id='extra-btn' class="extra-menu__item">
+               <button id='extra-btn' class="extra-menu__item" data-request='week'>
                   На неделю
                </button>
             </ul>
@@ -137,6 +137,32 @@
                      <div class="card-table__item card-item" data-type="temp_min">
                         <div class="card-item__label">Минимальная температура</div>
                         <div class="card-item__value"></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="week">
+               <div class="week__wrapper">
+                  <div class="week-item">
+                     <div class="week-item__day">
+                        Monday
+                     </div>
+                     <div class="week-item__picture">
+                        <img src="img/earth.png" alt="weather">
+                     </div>
+                     <div class="week-item__main-temperature">
+                        343
+                     </div>
+                     <div class="week-item__info">
+                        <div class="week-item__fluid">
+                           <div class="week-item__info-item week-item__day-temperature">
+                              Температура днем:43
+                           </div>
+                           <div class="week-item__info-item week-item__night-temperature">
+                              Температура ночью:334
+                           </div>
+                           
+                        </div>
                      </div>
                   </div>
                </div>
