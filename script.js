@@ -180,12 +180,83 @@ function switchCards(type) {
 function getWeatherData() {
    navigator.geolocation.getCurrentPosition((success) => {
       const {latitude, longitude} = success.coords;
-      getResponse(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${apiKey}`).then((response) => {
-         console.log(response);
+      getResponse(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
+         const dailyData = response.daily;
+         //console.log(dailyData)
+         function createDailyCards(data) {
+            let counter = 0;
+            function sortDays() {
+               const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thirsday','Friday','Saturday'];
+               const date = new Date;
+               const currentDayOfWeek = date.getDay();
+               let out = [];
+               for (let day = currentDayOfWeek; day < daysOfWeek.length; day++) {
+                  out.push(daysOfWeek[day])
+               }
+               for (let day = 0; day < currentDayOfWeek; day++) {
+                  out.push(daysOfWeek[day]);
+               }
+               return out
+            }
+            const cardWrapper = document.querySelector('.week__wrapper');
+
+            const weekDays = sortDays();
+
+            function createCard() {
+               const dataCounter = data[counter];
+               const card = document.createElement('div');
+               card.classList.add('week-item');
+
+               card.innerHTML = `
+                  <div class="week-item__main">
+                     <div class="week-item__day">
+                     ${weekDays[counter]}
+                     </div>
+                     <div class="week-item__picture">
+                        <img src="http://openweathermap.org/img/wn/${dataCounter.weather[0].icon}.png" alt="weather">
+                     </div>
+                     <div class="week-item__main-temperature">
+                        Ощющается как <span>${dataCounter.feels_like.day}</span>
+                     </div>
+                  </div>
+                  <div class="week-item__info">
+                     <div class="week-item__fluid">
+                        <div class="week-item__info-item week-item__day-temperature">
+                           Температура днем: <span class="week-item__info-item--value">${dataCounter.temp.day}</span>
+                        </div>
+                        <div class="week-item__info-item week-item__night-temperature">
+                           Температура ночью:<span class="week-item__info-item--value">${dataCounter.temp.night}</span>
+                        </div>
+                        <div class="week-item__info-item">
+                           Влажность:<span class="week-item__info-item--value">${dataCounter.humidity}</span>
+                        </div>
+                        <div class="week-item__info-item">
+                           Давление:<span class="week-item__info-item--value">${dataCounter.pressure}</span>
+                        </div>
+                        <div class="week-item__info-item">
+                           Скорость ветра:<span class="week-item__info-item--value">${dataCounter.wind_speed}</span>
+                        </div>
+                     </div>
+                  </div>
+               `;
+
+               cardWrapper.append(card);
+
+               if (counter !== data.length - 1) {
+                  counter++;
+                  createCard();
+               } else {
+                  return false;
+               }
+            }
+            createCard(data);
+         }
+         createDailyCards(dailyData);
       })
    });
 }
-console.log(getWeatherData())
+getWeatherData()
+//console.log(getWeatherData())
 
 
 

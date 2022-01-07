@@ -277,32 +277,50 @@ button {
 }
 .week__wrapper {
    display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between;
+   margin: 0 -5px;
 }
 .week-item {
    border: 1px solid #fff;
-   /*display: flex;*/
-   /*flex-direction: column;*/
-   /*text-align: center;*/
-   flex: 0 1 250px;
-   padding: 10px;
+   display: flex;
+   align-items: center;
+   flex-direction: column;
+   flex: 1 1 auto;
+   margin: 0 5px;
+   /*padding: 10px;*/
 }
 .week-item__day {
-   font-size: 18px;
+   font-size: 23px;
 }
 .week-item__info {
-   /*display: flex;*/
+   flex: 1 0 auto;
+   width: 100%;
+   margin-top: 15px;
 }
 .week-item__main-temperature {}
 .week-item__fluid {
-   /*display: flex;*/
-   /*align-items: center;*/
+
 }
 .week-item__day-temperature {}
 .week-item__night-temperature {}
-.week-item__picture {}
+.week-item__picture {
+   margin: 10px 0;
+}
 .week-item__picture img{
    max-width: 50px;
 }
 .week-item__info-item {
+   /*margin: 10px 0;*/
+   display: flex;
+   justify-content: space-between;
    border-top: 1px solid #fff;
+   padding: 5px 10px 5px 5px;
+}
+.week-item__main {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   padding: 10px 10px 0;
 }
