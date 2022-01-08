@@ -1,11 +1,12 @@
 'use strict';
-
+// All variables
 const baseUrl = 'http://api.openweathermap.org/data/2.5/weather?';
 const callUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
 //const urlCurrent = 'current';
 //const urlHistorical = 'historical';
 //const urlForecast = 'forecast';
-const apiKey = '';
+const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
+const mainWrapper = document.querySelector('.weather')
 const byCity = 'q=';
 const byWeek = '&exclude=daily';
 let currentLocation = 'Moscow';
@@ -21,7 +22,7 @@ const cardTypes = cardItems.map(function(item) {
 });
 
 const menu = document.getElementById('settings-menu');
-
+//--------------------------------------------------------------
 function getResponse(url) {
    return fetch(url).then((response) => {return response.json()});
 }
@@ -54,7 +55,6 @@ function general(requestUrl) {
          setExtraInfo(document.querySelector('#card-city'), data.name);
          setExtraInfo(document.getElementById('card-status'), getCurrentTime(data));
          setWheatherPicture(dataWeather);
-         //setDay(getCurrentTime(data));
       }
 
       function setExtraInfo(item, value) {
@@ -93,7 +93,7 @@ function general(requestUrl) {
       setUnit(requestUrl);
    });
 }  
-general(baseUrl + byCity + currentLocation + metric + apiKey);
+//general(baseUrl + byCity + currentLocation + metric + apiKey);
 
 function toggleSettingsMenu(event) {
    menu.classList.toggle('show');
@@ -102,18 +102,19 @@ function toggleSettingsMenu(event) {
 settingsButton.addEventListener('click', toggleSettingsMenu);
 
 
-
+// Search by city
 function searchByCity() {
    const inputCity = document.getElementById('search--city');
    currentLocation = inputCity.value;
    general(baseUrl + byCity + currentLocation + metric + apiKey);
 }
+
 document.querySelector('.search-btn').addEventListener('click',searchByCity);
 document.getElementById('search--city').addEventListener('keypress',(event) => {
    if (event.charCode == 13) searchByCity();
 });
 
-
+//----------------------------------------
 
 function switchUnit(elem) {
    const unit = elem.getAttribute('data-unit');
@@ -141,25 +142,27 @@ menu.addEventListener('click', (event) => {
    }
    return false;
 });
+//--------------------------------------------------------------
 
+//Functional for extra buttons
 const extraButtons = document.querySelectorAll('#extra-btn');
 const extraMenu = document.getElementById('extra-menu');
+
 extraMenu.addEventListener('click', (event) => {
    if(event.target.id != 'extra-btn') {
       return false;
    }
 
    extraButtons.forEach(element => {
-      if (element.classList.contains('settings--active')) {
-         element.classList.remove('settings--active');
-      } else {
+      if (!element.classList.contains('settings--active')) {
+         extraMenu.querySelector('.settings--active').classList.remove('settings--active')
          element.classList.add('settings--active');
       }
    });
    const requestType = event.target.getAttribute('data-request');
    switchCards(requestType);
 });
-
+//-------------------------------------------------------------------------
 function switchCards(type) {
    switch (type) {
       case 'day':
@@ -167,36 +170,33 @@ function switchCards(type) {
          console.log('day');
          break;
       case 'week':
-         const r = getResponse('https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,minutely&appid=69cbf08ca122c19f4ce91ce83efb3893');
-         r.then((data) => {
-            console.log(data)
-         })
-         //general(callUrl + currentLocation + metric + byWeek + apiKey);
-         console.log('week');
+         //const r = getResponse('https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,minutely&appid=69cbf08ca122c19f4ce91ce83efb3893');
+         //r.then((data) => {
+         //   console.log(data)
+         //})
+         mainWrapper.innerHTML = '';
+         getWeatherData();
+
          break;
    }
 }
 
 function getWeatherData() {
+   function setCurentWeather() {
+      
+   }
    navigator.geolocation.getCurrentPosition((success) => {
       const {latitude, longitude} = success.coords;
       getResponse(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
          const dailyData = response.daily;
-         //console.log(dailyData)
+         console.log(response)
          function createDailyCards(data) {
-            let counter = 0;
+            let counter = 1;
             function sortDays() {
                const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thirsday','Friday','Saturday'];
-               const date = new Date;
-               const currentDayOfWeek = date.getDay();
-               let out = [];
-               for (let day = currentDayOfWeek; day < daysOfWeek.length; day++) {
-                  out.push(daysOfWeek[day])
-               }
-               for (let day = 0; day < currentDayOfWeek; day++) {
-                  out.push(daysOfWeek[day]);
-               }
-               return out
+               const currentDayOfWeek = new Date().getDay();
+               const sort = () => [...daysOfWeek.slice(currentDayOfWeek),...daysOfWeek.slice(0,currentDayOfWeek)];
+               return sort();
             }
             const cardWrapper = document.querySelector('.week__wrapper');
 
@@ -210,7 +210,7 @@ function getWeatherData() {
                card.innerHTML = `
                   <div class="week-item__main">
                      <div class="week-item__day">
-                     ${weekDays[counter]}
+                     ${weekDays[counter - 1]}
                      </div>
                      <div class="week-item__picture">
                         <img src="http://openweathermap.org/img/wn/${dataCounter.weather[0].icon}.png" alt="weather">
@@ -252,10 +252,16 @@ function getWeatherData() {
             createCard(data);
          }
          createDailyCards(dailyData);
-      })
+      });
+   }, error => {
+      if (error) {
+         //alert(error.message);
+         //general(baseUrl + byCity + currentLocation + metric + apiKey);
+      }
    });
 }
-getWeatherData()
+general(baseUrl + byCity + currentLocation + metric + apiKey);
+//getWeatherData();
 //console.log(getWeatherData())
 
 

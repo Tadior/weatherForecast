@@ -288,7 +288,7 @@ button {
    flex-direction: column;
    flex: 1 1 auto;
    margin: 0 5px;
-   /*padding: 10px;*/
+   margin-top: 10px;
 }
 .week-item__day {
    font-size: 23px;
