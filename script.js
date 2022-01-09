@@ -6,7 +6,7 @@ const callUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
 //const urlHistorical = 'historical';
 //const urlForecast = 'forecast';
 const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
-const mainWrapper = document.querySelector('.weather')
+const mainWrapper = document.querySelector('.weather');
 const byCity = 'q=';
 const byWeek = '&exclude=daily';
 let currentLocation = 'Moscow';
@@ -27,72 +27,72 @@ function getResponse(url) {
    return fetch(url).then((response) => {return response.json()});
 }
 
-function general(requestUrl) {
-   getResponse(requestUrl).then((responseValue) => {
-      const data = responseValue;
-      if (!data.main) {
-         alert(data.message);
-         return false;
-      }
-      console.log(data)
-      const dataMain = data.main;
-      const dataWeather = data.weather[0];
-      //const timezone = data.timezone;
+//function general(requestUrl) {
+//   getResponse(requestUrl).then((responseValue) => {
+//      const data = responseValue;
+//      if (!data.main) {
+//         alert(data.message);
+//         return false;
+//      }
+//      console.log(data)
+//      const dataMain = data.main;
+//      const dataWeather = data.weather[0];
+//      //const timezone = data.timezone;
 
-      const weatherPicture = document.querySelector('.weather-picture');
+//      const weatherPicture = document.querySelector('.weather-picture');
 
-      function setInfo(info) {
+//      function setInfo(info) {
 
-         for (let item in info) {
-            for (let i of cardItems) {
-               if (i.getAttribute('data-type') === item) {
-                  i.querySelector('.card-item__value').textContent = info[item];
-               }
-            }
-         }
+//         for (let item in info) {
+//            for (let i of cardItems) {
+//               if (i.getAttribute('data-type') === item) {
+//                  i.querySelector('.card-item__value').textContent = info[item];
+//               }
+//            }
+//         }
 
-         setExtraInfo(cardTemperature, dataMain.temp);
-         setExtraInfo(document.querySelector('#card-city'), data.name);
-         setExtraInfo(document.getElementById('card-status'), getCurrentTime(data));
-         setWheatherPicture(dataWeather);
-      }
+//         setExtraInfo(cardTemperature, dataMain.temp);
+//         setExtraInfo(document.querySelector('#card-city'), data.name);
+//         setExtraInfo(document.getElementById('card-status'), getCurrentTime(data));
+//         setWheatherPicture(dataWeather);
+//      }
 
-      function setExtraInfo(item, value) {
-         item.textContent = value;
-      }
+//      function setExtraInfo(item, value) {
+//         item.textContent = value;
+//      }
 
-      function setWheatherPicture(info) {
-         weatherPicture.src = `http://openweathermap.org/img/wn/${info.icon}.png`;
-      }
+//      function setWheatherPicture(info) {
+//         weatherPicture.src = `http://openweathermap.org/img/wn/${info.icon}.png`;
+//      }
 
-      function setUnit(url) {
-         if (url.includes('metric')) {
-            cardTemperature.textContent += '°C';
-         } else {
-            cardTemperature.textContent += '°F';
-         }
-      }
+//      function setUnit(url) {
+//         if (url.includes('metric')) {
+//            cardTemperature.textContent += '°C';
+//         } else {
+//            cardTemperature.textContent += '°F';
+//         }
+//      }
 
-      function getCurrentTime(data) {
+//      function getCurrentTime(data) {
          
-      }
-      function setDay(time) {
-         const timeArr = time.split(':');
-         const hours = timeArr[0];
-         const element = document.querySelector("[data-type='is_day']");
-         let out = '';
-         if (hours >= 0 && hours < 6 ) out = 'Ночь';
-         if (hours >= 6 && hours < 12 ) out = 'Утро';
-         if (hours >= 12 && hours < 18 ) out = 'День';
-         if (hours >= 18 && hours < 24 ) out = 'Вечер';
-         console.log(hours)
-         element.querySelector('.card-item__value').textContent = out;
-      }
+//      }
+//      function setDay(time) {
+//         const timeArr = time.split(':');
+//         const hours = timeArr[0];
+//         const element = document.querySelector("[data-type='is_day']");
+//         let out = '';
+//         if (hours >= 0 && hours < 6 ) out = 'Ночь';
+//         if (hours >= 6 && hours < 12 ) out = 'Утро';
+//         if (hours >= 12 && hours < 18 ) out = 'День';
+//         if (hours >= 18 && hours < 24 ) out = 'Вечер';
+//         console.log(hours)
+//         element.querySelector('.card-item__value').textContent = out;
+//      }
 
-      setInfo(dataMain);
-      setUnit(requestUrl);
-   });
-}  
+//      setInfo(dataMain);
+//      setUnit(requestUrl);
+//   });
+//}  
 //general(baseUrl + byCity + currentLocation + metric + apiKey);
 
 function toggleSettingsMenu(event) {
@@ -182,87 +182,166 @@ function switchCards(type) {
 }
 
 function getWeatherData() {
-   function setCurentWeather() {
-      
+   function getUserPosition() {
+      return new Promise((resolve,reject) => {
+         navigator.geolocation.getCurrentPosition(resolve,reject);
+      })
    }
-   navigator.geolocation.getCurrentPosition((success) => {
-      const {latitude, longitude} = success.coords;
-      getResponse(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
-         const dailyData = response.daily;
-         console.log(response)
-         function createDailyCards(data) {
-            let counter = 1;
-            function sortDays() {
-               const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thirsday','Friday','Saturday'];
-               const currentDayOfWeek = new Date().getDay();
-               const sort = () => [...daysOfWeek.slice(currentDayOfWeek),...daysOfWeek.slice(0,currentDayOfWeek)];
-               return sort();
-            }
-            const cardWrapper = document.querySelector('.week__wrapper');
-
-            const weekDays = sortDays();
-
-            function createCard() {
-               const dataCounter = data[counter];
-               const card = document.createElement('div');
-               card.classList.add('week-item');
-
-               card.innerHTML = `
-                  <div class="week-item__main">
-                     <div class="week-item__day">
-                     ${weekDays[counter - 1]}
-                     </div>
-                     <div class="week-item__picture">
-                        <img src="http://openweathermap.org/img/wn/${dataCounter.weather[0].icon}.png" alt="weather">
-                     </div>
-                     <div class="week-item__main-temperature">
-                        Ощющается как <span>${dataCounter.feels_like.day}</span>
-                     </div>
-                  </div>
-                  <div class="week-item__info">
-                     <div class="week-item__fluid">
-                        <div class="week-item__info-item week-item__day-temperature">
-                           Температура днем: <span class="week-item__info-item--value">${dataCounter.temp.day}</span>
-                        </div>
-                        <div class="week-item__info-item week-item__night-temperature">
-                           Температура ночью:<span class="week-item__info-item--value">${dataCounter.temp.night}</span>
-                        </div>
-                        <div class="week-item__info-item">
-                           Влажность:<span class="week-item__info-item--value">${dataCounter.humidity}</span>
-                        </div>
-                        <div class="week-item__info-item">
-                           Давление:<span class="week-item__info-item--value">${dataCounter.pressure}</span>
-                        </div>
-                        <div class="week-item__info-item">
-                           Скорость ветра:<span class="week-item__info-item--value">${dataCounter.wind_speed}</span>
-                        </div>
-                     </div>
-                  </div>
-               `;
-
-               cardWrapper.append(card);
-
-               if (counter !== data.length - 1) {
-                  counter++;
-                  createCard();
-               } else {
-                  return false;
-               }
-            }
-            createCard(data);
-         }
-         createDailyCards(dailyData);
-      });
-   }, error => {
-      if (error) {
-         //alert(error.message);
-         //general(baseUrl + byCity + currentLocation + metric + apiKey);
-      }
+   getUserPosition()
+   .then((data) => {
+      console.log(data);
+   })
+   .catch((error) => {
+      setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
    });
+   //currentUserPosition()
+   //console.log(currentUserPosition)
+   //navigator.geolocation.getCurrentPosition((success) => {
+   //   const {latitude, longitude} = success.coords;
+   //   getResponse(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
+   //      const dailyData = response.daily;
+   //      console.log(response)
+   //      createDailyCards(dailyData);
+   //   });
+   //}, error => {
+   //   if (error) {
+
+   //   }
+   //});
+
+   //setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
 }
-general(baseUrl + byCity + currentLocation + metric + apiKey);
-//getWeatherData();
-//console.log(getWeatherData())
+//general(baseUrl + byCity + currentLocation + metric + apiKey);
+getWeatherData();
+
+
+function setStartData(requestUrl) {
+   getResponse(requestUrl).then((response) => {
+      console.log(response);
+      const dataMain = response.main;
+      const dataWeather = response.weather[0];
+      mainWrapper.innerHTML = `
+      <div class="weather__card card">
+         <div class="card__title">
+            Погода:
+            <span id="card-city" class="card-city">${response.name}</span>
+         </div>
+         <div class="card__status">
+            По состоянию на 
+            <span id="card-status" class="card-status">
+               
+            </span>
+         </div>
+         <div class="card__main">
+            <div class="card__temperature">
+               <span id="card-temperature">${dataMain.feels_like}</span>
+            </div>
+            <div class="card__picture">
+               <img src="http://openweathermap.org/img/wn/${dataWeather.icon}.png" alt="" class="weather-picture" id='weather-picture'>
+            </div>
+         </div>
+
+         <div class="card-table">
+            <div class="card-table__item card-item" data-type="temp">
+               <div class="card-item__label">Температура</div>
+               <div class="card-item__value">${dataMain.temp}</div>
+            </div>
+            <div class="card-table__item card-item" data-type="feels_like">
+               <div class="card-item__label">Ощющается как</div>
+               <div class="card-item__value">${dataMain.feels_like}</div>
+            </div>
+            <div class="card-table__item card-item" data-type="humidity">
+               <div class="card-item__label">Влажность</div>
+               <div class="card-item__value">${dataMain.humidity}</div>
+            </div>
+            <div class="card-table__item card-item" data-type="is_day">
+               <div class="card-item__label">Время суток </div>
+               <div class="card-item__value"></div>
+            </div>
+            <div class="card-table__item card-item" data-type="pressure">
+               <div class="card-item__label">Давление</div>
+               <div class="card-item__value">${dataMain.pressure}</div>
+            </div>
+            <div class="card-table__item card-item" data-type="sea_level">
+               <div class="card-item__label">Уровень моря</div>
+               <div class="card-item__value">${dataMain.sea_level}</div>
+            </div>
+            <div class="card-table__item card-item" data-type="temp_max">
+               <div class="card-item__label">Максимальная температура</div>
+               <div class="card-item__value">${dataMain.temp_max}</div>
+            </div>
+            <div class="card-table__item card-item" data-type="temp_min">
+               <div class="card-item__label">Минимальная температура</div>
+               <div class="card-item__value">${dataMain.temp_min}</div>
+            </div>
+         </div>
+      </div>
+      `;
+   })
+}
+
+
+function createDailyCards(data) {
+   let counter = 1;
+   function sortDays() {
+      const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thirsday','Friday','Saturday'];
+      const currentDayOfWeek = new Date().getDay();
+      const sort = () => [...daysOfWeek.slice(currentDayOfWeek),...daysOfWeek.slice(0,currentDayOfWeek)];
+      return sort();
+   }
+   const cardWrapper = document.querySelector('.week__wrapper');
+
+   const weekDays = sortDays();
+
+   function createCard() {
+      const dataCounter = data[counter];
+      const card = document.createElement('div');
+      card.classList.add('week-item');
+
+      card.innerHTML = `
+         <div class="week-item__main">
+            <div class="week-item__day">
+            ${weekDays[counter - 1]}
+            </div>
+            <div class="week-item__picture">
+               <img src="http://openweathermap.org/img/wn/${dataCounter.weather[0].icon}.png" alt="weather">
+            </div>
+            <div class="week-item__main-temperature">
+               Ощющается как <span>${dataCounter.feels_like.day}</span>
+            </div>
+         </div>
+         <div class="week-item__info">
+            <div class="week-item__fluid">
+               <div class="week-item__info-item week-item__day-temperature">
+                  Температура днем: <span class="week-item__info-item--value">${dataCounter.temp.day}</span>
+               </div>
+               <div class="week-item__info-item week-item__night-temperature">
+                  Температура ночью:<span class="week-item__info-item--value">${dataCounter.temp.night}</span>
+               </div>
+               <div class="week-item__info-item">
+                  Влажность:<span class="week-item__info-item--value">${dataCounter.humidity}</span>
+               </div>
+               <div class="week-item__info-item">
+                  Давление:<span class="week-item__info-item--value">${dataCounter.pressure}</span>
+               </div>
+               <div class="week-item__info-item">
+                  Скорость ветра:<span class="week-item__info-item--value">${dataCounter.wind_speed}</span>
+               </div>
+            </div>
+         </div>
+      `;
+
+      cardWrapper.append(card);
+
+      if (counter !== data.length - 1) {
+         counter++;
+         createCard();
+      } else {
+         return false;
+      }
+   }
+   createCard(data);
+}
 
 
 
