@@ -12,6 +12,8 @@ const byWeek = '&exclude=daily';
 let currentLocation = 'Moscow';
 const metric = '&units=metric';
 const imperial = '&units=imperial';
+let longitude = '';
+let latitude = '';
 
 const cardItems = Array.from(document.querySelectorAll('.card-item'));
 const settingsButton = document.getElementById('header-settings');
@@ -166,50 +168,33 @@ extraMenu.addEventListener('click', (event) => {
 function switchCards(type) {
    switch (type) {
       case 'day':
-         general(baseUrl + byCity + currentLocation + metric + apiKey);
+         getWeatherData()
          console.log('day');
          break;
       case 'week':
-         //const r = getResponse('https://api.openweathermap.org/data/2.5/onecall?lat=33.44&lon=-94.04&exclude=hourly,minutely&appid=69cbf08ca122c19f4ce91ce83efb3893');
-         //r.then((data) => {
-         //   console.log(data)
-         //})
          mainWrapper.innerHTML = '';
-         getWeatherData();
-
+         setWeekWeather(latitude,longitude,currentLocation);
          break;
    }
 }
 
 function getWeatherData() {
+
    function getUserPosition() {
       return new Promise((resolve,reject) => {
          navigator.geolocation.getCurrentPosition(resolve,reject);
-      })
+      });
    }
-   getUserPosition()
-   .then((data) => {
+
+   getUserPosition().then((data) => {
       console.log(data);
+      latitude = data.coords.latitude;
+      longitude = data.coords.longitude;
+      setStartData(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`);
    })
    .catch((error) => {
       setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
    });
-   //currentUserPosition()
-   //console.log(currentUserPosition)
-   //navigator.geolocation.getCurrentPosition((success) => {
-   //   const {latitude, longitude} = success.coords;
-   //   getResponse(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
-   //      const dailyData = response.daily;
-   //      console.log(response)
-   //      createDailyCards(dailyData);
-   //   });
-   //}, error => {
-   //   if (error) {
-
-   //   }
-   //});
-
-   //setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
 }
 //general(baseUrl + byCity + currentLocation + metric + apiKey);
 getWeatherData();
@@ -218,13 +203,28 @@ getWeatherData();
 function setStartData(requestUrl) {
    getResponse(requestUrl).then((response) => {
       console.log(response);
-      const dataMain = response.main;
-      const dataWeather = response.weather[0];
+      let info = {};
+      if ('lat' in response) {
+         info.cityName = response.timezone.substr(response.timezone.lastIndexOf('/') + 1);
+         info.temperature = response.current.temp;
+         info.feelsLike = response.current.feels_like;
+         info.humidity = response.current.humidity;
+         info.pressure = response.current.pressure;
+         info.picture = response.current.weather[0].icon;
+      } else if ('main' in response) {
+         info.cityName = response.name;
+         info.temperature = response.main.temp;
+         info.feelsLike = response.main.feels_like;
+         info.humidity = response.main.humidity;
+         info.pressure = response.main.pressure;
+         info.picture = response.weather[0].icon;
+      }
+      console.log(info);
       mainWrapper.innerHTML = `
       <div class="weather__card card">
          <div class="card__title">
             Погода:
-            <span id="card-city" class="card-city">${response.name}</span>
+            <span id="card-city" class="card-city">${info.cityName}</span>
          </div>
          <div class="card__status">
             По состоянию на 
@@ -234,25 +234,25 @@ function setStartData(requestUrl) {
          </div>
          <div class="card__main">
             <div class="card__temperature">
-               <span id="card-temperature">${dataMain.feels_like}</span>
+               <span id="card-temperature">${info.feelsLike}</span>
             </div>
             <div class="card__picture">
-               <img src="http://openweathermap.org/img/wn/${dataWeather.icon}.png" alt="" class="weather-picture" id='weather-picture'>
+               <img src="http://openweathermap.org/img/wn/${info.picture}.png" alt="" class="weather-picture" id='weather-picture'>
             </div>
          </div>
 
          <div class="card-table">
             <div class="card-table__item card-item" data-type="temp">
                <div class="card-item__label">Температура</div>
-               <div class="card-item__value">${dataMain.temp}</div>
+               <div class="card-item__value">${info.temperature}</div>
             </div>
             <div class="card-table__item card-item" data-type="feels_like">
                <div class="card-item__label">Ощющается как</div>
-               <div class="card-item__value">${dataMain.feels_like}</div>
+               <div class="card-item__value">${info.feelsLike}</div>
             </div>
             <div class="card-table__item card-item" data-type="humidity">
                <div class="card-item__label">Влажность</div>
-               <div class="card-item__value">${dataMain.humidity}</div>
+               <div class="card-item__value">${info.humidity}</div>
             </div>
             <div class="card-table__item card-item" data-type="is_day">
                <div class="card-item__label">Время суток </div>
@@ -260,19 +260,7 @@ function setStartData(requestUrl) {
             </div>
             <div class="card-table__item card-item" data-type="pressure">
                <div class="card-item__label">Давление</div>
-               <div class="card-item__value">${dataMain.pressure}</div>
-            </div>
-            <div class="card-table__item card-item" data-type="sea_level">
-               <div class="card-item__label">Уровень моря</div>
-               <div class="card-item__value">${dataMain.sea_level}</div>
-            </div>
-            <div class="card-table__item card-item" data-type="temp_max">
-               <div class="card-item__label">Максимальная температура</div>
-               <div class="card-item__value">${dataMain.temp_max}</div>
-            </div>
-            <div class="card-table__item card-item" data-type="temp_min">
-               <div class="card-item__label">Минимальная температура</div>
-               <div class="card-item__value">${dataMain.temp_min}</div>
+               <div class="card-item__value">${info.pressure}</div>
             </div>
          </div>
       </div>
@@ -294,10 +282,10 @@ function createDailyCards(data) {
    const weekDays = sortDays();
 
    function createCard() {
-      const dataCounter = data[counter];
+      const dataCounter = data.daily[counter];
       const card = document.createElement('div');
       card.classList.add('week-item');
-
+      //console.log(dataCounter.weather[0])
       card.innerHTML = `
          <div class="week-item__main">
             <div class="week-item__day">
@@ -332,7 +320,7 @@ function createDailyCards(data) {
       `;
 
       cardWrapper.append(card);
-
+      console.log(counter)
       if (counter !== data.length - 1) {
          counter++;
          createCard();
@@ -341,6 +329,16 @@ function createDailyCards(data) {
       }
    }
    createCard(data);
+}
+
+function setWeekWeather(latitude,longitude,city) {
+   if (latitude.length != 0) {
+      getResponse(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
+         createDailyCards(response);
+      })
+   } else {
+
+   }
 }
 
 
