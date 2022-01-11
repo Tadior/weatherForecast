@@ -2,11 +2,9 @@
 // All variables
 const baseUrl = 'http://api.openweathermap.org/data/2.5/weather?';
 const callUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
-//const urlCurrent = 'current';
-//const urlHistorical = 'historical';
-//const urlForecast = 'forecast';
 const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
 const mainWrapper = document.querySelector('.weather');
+const weekWrapper = document.querySelector('.week__wrapper');
 const byCity = 'q=';
 const byWeek = '&exclude=daily';
 let currentLocation = 'Moscow';
@@ -154,13 +152,13 @@ extraMenu.addEventListener('click', (event) => {
    if(event.target.id != 'extra-btn') {
       return false;
    }
+   if (!event.target.classList.contains('settings--active')) {
+      extraButtons.forEach((button) => {
+         button.classList.remove('settings--active');
+      })
+      event.target.classList.add('settings--active');
+   }
 
-   extraButtons.forEach(element => {
-      if (!element.classList.contains('settings--active')) {
-         extraMenu.querySelector('.settings--active').classList.remove('settings--active')
-         element.classList.add('settings--active');
-      }
-   });
    const requestType = event.target.getAttribute('data-request');
    switchCards(requestType);
 });
@@ -168,8 +166,8 @@ extraMenu.addEventListener('click', (event) => {
 function switchCards(type) {
    switch (type) {
       case 'day':
+         weekWrapper.innerHTML = '';
          getWeatherData()
-         console.log('day');
          break;
       case 'week':
          mainWrapper.innerHTML = '';
@@ -187,7 +185,6 @@ function getWeatherData() {
    }
 
    getUserPosition().then((data) => {
-      console.log(data);
       latitude = data.coords.latitude;
       longitude = data.coords.longitude;
       setStartData(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`);
@@ -202,7 +199,6 @@ getWeatherData();
 
 function setStartData(requestUrl) {
    getResponse(requestUrl).then((response) => {
-      console.log(response);
       let info = {};
       if ('lat' in response) {
          info.cityName = response.timezone.substr(response.timezone.lastIndexOf('/') + 1);
@@ -219,7 +215,6 @@ function setStartData(requestUrl) {
          info.pressure = response.main.pressure;
          info.picture = response.weather[0].icon;
       }
-      console.log(info);
       mainWrapper.innerHTML = `
       <div class="weather__card card">
          <div class="card__title">
@@ -270,26 +265,25 @@ function setStartData(requestUrl) {
 
 
 function createDailyCards(data) {
-   let counter = 1;
+   let counter = 0;
+
    function sortDays() {
-      const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thirsday','Friday','Saturday'];
+      const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const currentDayOfWeek = new Date().getDay();
-      const sort = () => [...daysOfWeek.slice(currentDayOfWeek),...daysOfWeek.slice(0,currentDayOfWeek)];
+      const sort = () => [...daysOfWeek.slice(currentDayOfWeek + 1),...daysOfWeek.slice(0,currentDayOfWeek + 1),...daysOfWeek.slice(currentDayOfWeek + 1)];
       return sort();
    }
    const cardWrapper = document.querySelector('.week__wrapper');
 
    const weekDays = sortDays();
-
    function createCard() {
       const dataCounter = data.daily[counter];
       const card = document.createElement('div');
       card.classList.add('week-item');
-      //console.log(dataCounter.weather[0])
       card.innerHTML = `
          <div class="week-item__main">
             <div class="week-item__day">
-            ${weekDays[counter - 1]}
+            ${weekDays[counter]}
             </div>
             <div class="week-item__picture">
                <img src="http://openweathermap.org/img/wn/${dataCounter.weather[0].icon}.png" alt="weather">
@@ -318,10 +312,8 @@ function createDailyCards(data) {
             </div>
          </div>
       `;
-
       cardWrapper.append(card);
-      console.log(counter)
-      if (counter !== data.length - 1) {
+      if (counter !== data.daily.length - 1) {
          counter++;
          createCard();
       } else {
