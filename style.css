@@ -185,8 +185,7 @@ button {
 }
 .weather {
    flex: 1 1 auto;
-/*display: flex;*/
-
+   margin-top: 20px;
 }
 .weather-card {
    flex: 1 1 auto;
@@ -203,6 +202,8 @@ button {
    background: transparent;
    border: 1px solid;
    border-radius: 10px;
+   max-width: 500px;
+   margin: 0 auto;
 }
 .card__main {
    display: flex;
@@ -286,7 +287,7 @@ button {
    display: flex;
    align-items: center;
    flex-direction: column;
-   flex: 1 1 auto;
+   flex: 1 1 237px;
    margin: 0 5px;
    margin-top: 10px;
 }

@@ -2,9 +2,10 @@
 // All variables
 const baseUrl = 'http://api.openweathermap.org/data/2.5/weather?';
 const callUrl = 'https://api.openweathermap.org/data/2.5/onecall?';
+const geoUrl = 'http://api.openweathermap.org/geo/1.0/direct?';
 const apiKey = '&appid=69cbf08ca122c19f4ce91ce83efb3893';
 const mainWrapper = document.querySelector('.weather');
-const weekWrapper = document.querySelector('.week__wrapper');
+const week = document.querySelector('.week');
 const byCity = 'q=';
 const byWeek = '&exclude=daily';
 let currentLocation = 'Moscow';
@@ -27,74 +28,6 @@ function getResponse(url) {
    return fetch(url).then((response) => {return response.json()});
 }
 
-//function general(requestUrl) {
-//   getResponse(requestUrl).then((responseValue) => {
-//      const data = responseValue;
-//      if (!data.main) {
-//         alert(data.message);
-//         return false;
-//      }
-//      console.log(data)
-//      const dataMain = data.main;
-//      const dataWeather = data.weather[0];
-//      //const timezone = data.timezone;
-
-//      const weatherPicture = document.querySelector('.weather-picture');
-
-//      function setInfo(info) {
-
-//         for (let item in info) {
-//            for (let i of cardItems) {
-//               if (i.getAttribute('data-type') === item) {
-//                  i.querySelector('.card-item__value').textContent = info[item];
-//               }
-//            }
-//         }
-
-//         setExtraInfo(cardTemperature, dataMain.temp);
-//         setExtraInfo(document.querySelector('#card-city'), data.name);
-//         setExtraInfo(document.getElementById('card-status'), getCurrentTime(data));
-//         setWheatherPicture(dataWeather);
-//      }
-
-//      function setExtraInfo(item, value) {
-//         item.textContent = value;
-//      }
-
-//      function setWheatherPicture(info) {
-//         weatherPicture.src = `http://openweathermap.org/img/wn/${info.icon}.png`;
-//      }
-
-//      function setUnit(url) {
-//         if (url.includes('metric')) {
-//            cardTemperature.textContent += '°C';
-//         } else {
-//            cardTemperature.textContent += '°F';
-//         }
-//      }
-
-//      function getCurrentTime(data) {
-         
-//      }
-//      function setDay(time) {
-//         const timeArr = time.split(':');
-//         const hours = timeArr[0];
-//         const element = document.querySelector("[data-type='is_day']");
-//         let out = '';
-//         if (hours >= 0 && hours < 6 ) out = 'Ночь';
-//         if (hours >= 6 && hours < 12 ) out = 'Утро';
-//         if (hours >= 12 && hours < 18 ) out = 'День';
-//         if (hours >= 18 && hours < 24 ) out = 'Вечер';
-//         console.log(hours)
-//         element.querySelector('.card-item__value').textContent = out;
-//      }
-
-//      setInfo(dataMain);
-//      setUnit(requestUrl);
-//   });
-//}  
-//general(baseUrl + byCity + currentLocation + metric + apiKey);
-
 function toggleSettingsMenu(event) {
    menu.classList.toggle('show');
    settingsButton.classList.toggle('header-settings--pressed'); 
@@ -106,7 +39,25 @@ settingsButton.addEventListener('click', toggleSettingsMenu);
 function searchByCity() {
    const inputCity = document.getElementById('search--city');
    currentLocation = inputCity.value;
-   general(baseUrl + byCity + currentLocation + metric + apiKey);
+   getResponse(`${geoUrl}${byCity}${currentLocation}${apiKey}`).then((data) => {
+      latitude = data[0].lat;
+      longitude = data[0].lon;
+      currentLocation = data[0].name;
+      extraButtons.forEach((button) => {
+         if (button.classList.contains('settings--active')) {
+            let buttonData = button.getAttribute('data-request');
+            switch (buttonData) {
+               case 'day':
+                  setStartData(baseUrl + byCity + currentLocation + metric + apiKey)
+                  break;
+               case 'week':
+                  setWeekWeather(latitude,longitude);
+                  break;
+            }
+         }
+      })
+   });
+   
 }
 
 document.querySelector('.search-btn').addEventListener('click',searchByCity);
@@ -116,32 +67,32 @@ document.getElementById('search--city').addEventListener('keypress',(event) => {
 
 //----------------------------------------
 
-function switchUnit(elem) {
-   const unit = elem.getAttribute('data-unit');
-   elem.parentNode.querySelector('.settings--active').classList.remove('settings--active');
-   elem.classList.add('settings--active');
-   let unitText = '';
-   switch(unit) {
-      case 'C':
-         general(baseUrl + byCity + currentLocation + metric + apiKey);
-         unitText = '°C';
-         break;
-      case 'F': 
-         general(baseUrl + byCity + currentLocation + imperial + apiKey);
-         unitText = '°F';
-         break;
-   }
-   settingsButton.querySelector('#unit').textContent = unitText;
-}
+//function switchUnit(elem) {
+//   const unit = elem.getAttribute('data-unit');
+//   elem.parentNode.querySelector('.settings--active').classList.remove('settings--active');
+//   elem.classList.add('settings--active');
+//   let unitText = '';
+//   switch(unit) {
+//      case 'C':
+//         general(baseUrl + byCity + currentLocation + metric + apiKey);
+//         unitText = '°C';
+//         break;
+//      case 'F': 
+//         general(baseUrl + byCity + currentLocation + imperial + apiKey);
+//         unitText = '°F';
+//         break;
+//   }
+//   settingsButton.querySelector('#unit').textContent = unitText;
+//}
 
 
-menu.addEventListener('click', (event) => {
-   if (event.target.getAttribute('data-unit')) {
-      switchUnit(event.target);
-      toggleSettingsMenu();
-   }
-   return false;
-});
+//menu.addEventListener('click', (event) => {
+//   if (event.target.getAttribute('data-unit')) {
+//      switchUnit(event.target);
+//      toggleSettingsMenu();
+//   }
+//   return false;
+//});
 //--------------------------------------------------------------
 
 //Functional for extra buttons
@@ -166,8 +117,9 @@ extraMenu.addEventListener('click', (event) => {
 function switchCards(type) {
    switch (type) {
       case 'day':
-         weekWrapper.innerHTML = '';
-         getWeatherData()
+         week.innerHTML = '';
+         //getWeatherData();
+         setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
          break;
       case 'week':
          mainWrapper.innerHTML = '';
@@ -193,14 +145,17 @@ function getWeatherData() {
       setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
    });
 }
-//general(baseUrl + byCity + currentLocation + metric + apiKey);
+
 getWeatherData();
 
 
 function setStartData(requestUrl) {
    getResponse(requestUrl).then((response) => {
+      console.log(response)
+      //currentLocation = response.timezone.substr(response.timezone.lastIndexOf('/') + 1);
       let info = {};
       if ('lat' in response) {
+         currentLocation = response.timezone.substr(response.timezone.lastIndexOf('/') + 1);
          info.cityName = response.timezone.substr(response.timezone.lastIndexOf('/') + 1);
          info.temperature = response.current.temp;
          info.feelsLike = response.current.feels_like;
@@ -273,7 +228,9 @@ function createDailyCards(data) {
       const sort = () => [...daysOfWeek.slice(currentDayOfWeek + 1),...daysOfWeek.slice(0,currentDayOfWeek + 1),...daysOfWeek.slice(currentDayOfWeek + 1)];
       return sort();
    }
-   const cardWrapper = document.querySelector('.week__wrapper');
+
+   week.innerHTML = '<div class="week__wrapper"></div>';
+   const cardWrapper = week.querySelector('.week__wrapper');
 
    const weekDays = sortDays();
    function createCard() {
@@ -324,8 +281,10 @@ function createDailyCards(data) {
 }
 
 function setWeekWeather(latitude,longitude,city) {
+   console.log(latitude)
    if (latitude.length != 0) {
       getResponse(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
+         console.log(response)
          createDailyCards(response);
       })
    } else {
