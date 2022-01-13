@@ -9,8 +9,7 @@ const week = document.querySelector('.week');
 const byCity = 'q=';
 const byWeek = '&exclude=daily';
 let currentLocation = 'Moscow';
-const metric = '&units=metric';
-const imperial = '&units=imperial';
+let metric = 'metric';
 let longitude = '';
 let latitude = '';
 
@@ -48,7 +47,7 @@ function searchByCity() {
             let buttonData = button.getAttribute('data-request');
             switch (buttonData) {
                case 'day':
-                  setStartData(baseUrl + byCity + currentLocation + metric + apiKey)
+                  setStartData(baseUrl + byCity + currentLocation + '&units=' + metric + apiKey)
                   break;
                case 'week':
                   setWeekWeather(latitude,longitude);
@@ -67,32 +66,43 @@ document.getElementById('search--city').addEventListener('keypress',(event) => {
 
 //----------------------------------------
 
-//function switchUnit(elem) {
-//   const unit = elem.getAttribute('data-unit');
-//   elem.parentNode.querySelector('.settings--active').classList.remove('settings--active');
-//   elem.classList.add('settings--active');
-//   let unitText = '';
-//   switch(unit) {
-//      case 'C':
-//         general(baseUrl + byCity + currentLocation + metric + apiKey);
-//         unitText = '°C';
-//         break;
-//      case 'F': 
-//         general(baseUrl + byCity + currentLocation + imperial + apiKey);
-//         unitText = '°F';
-//         break;
-//   }
-//   settingsButton.querySelector('#unit').textContent = unitText;
-//}
+function switchUnit(elem) {
+   const unit = elem.getAttribute('data-unit');
+   elem.parentNode.querySelector('.settings--active').classList.remove('settings--active');
+   elem.classList.add('settings--active');
+   let unitText = '';
+   const settingsActiveType = extraMenu.querySelector('.settings--active').getAttribute('data-request');
+   switch(unit) {
+      case 'C':
+         metric = 'metric';
+         if (settingsActiveType === 'day') {
+            setStartData(baseUrl + byCity + currentLocation + '&units=' + metric + apiKey);
+         } else {
+            setWeekWeather(latitude,longitude,currentLocation);
+         }
+         unitText = '°C';
+         break;
+      case 'F':
+         metric = 'imperial';
+         if (settingsActiveType === 'day') {
+            setStartData(baseUrl + byCity + currentLocation + '&units=' + metric + apiKey);
+         } else {
+            setWeekWeather(latitude,longitude,currentLocation);
+         }
+         unitText = '°F';
+         break;
+   }
+   settingsButton.querySelector('#unit').textContent = unitText;
+}
 
 
-//menu.addEventListener('click', (event) => {
-//   if (event.target.getAttribute('data-unit')) {
-//      switchUnit(event.target);
-//      toggleSettingsMenu();
-//   }
-//   return false;
-//});
+menu.addEventListener('click', (event) => {
+   if (event.target.getAttribute('data-unit')) {
+      switchUnit(event.target);
+      toggleSettingsMenu();
+   }
+   return false;
+});
 //--------------------------------------------------------------
 
 //Functional for extra buttons
@@ -119,7 +129,7 @@ function switchCards(type) {
       case 'day':
          week.innerHTML = '';
          //getWeatherData();
-         setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
+         setStartData(baseUrl + byCity + currentLocation + '&units=' + metric + apiKey);
          break;
       case 'week':
          mainWrapper.innerHTML = '';
@@ -139,10 +149,10 @@ function getWeatherData() {
    getUserPosition().then((data) => {
       latitude = data.coords.latitude;
       longitude = data.coords.longitude;
-      setStartData(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`);
+      setStartData(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=${metric}${apiKey}`);
    })
    .catch((error) => {
-      setStartData(baseUrl + byCity + currentLocation + metric + apiKey);
+      setStartData(baseUrl + byCity + currentLocation + '&units=' + metric + apiKey);
    });
 }
 
@@ -283,7 +293,7 @@ function createDailyCards(data) {
 function setWeekWeather(latitude,longitude,city) {
    console.log(latitude)
    if (latitude.length != 0) {
-      getResponse(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely${metric}${apiKey}`).then((response) => {
+      getResponse(`${callUrl}lat=${latitude}&lon=${longitude}&exclude=hourly,minutely&units=${metric}${apiKey}`).then((response) => {
          console.log(response)
          createDailyCards(response);
       })
