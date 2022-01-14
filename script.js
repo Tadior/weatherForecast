@@ -55,8 +55,9 @@ function searchByCity() {
             }
          }
       })
-   });
-   
+   }).catch(error => {
+      alert('Название города введено некорректно');
+   })
 }
 
 document.querySelector('.search-btn').addEventListener('click',searchByCity);
@@ -186,12 +187,6 @@ function setStartData(requestUrl) {
             Погода:
             <span id="card-city" class="card-city">${info.cityName}</span>
          </div>
-         <div class="card__status">
-            По состоянию на 
-            <span id="card-status" class="card-status">
-               
-            </span>
-         </div>
          <div class="card__main">
             <div class="card__temperature">
                <span id="card-temperature">${info.feelsLike}</span>
@@ -213,10 +208,6 @@ function setStartData(requestUrl) {
             <div class="card-table__item card-item" data-type="humidity">
                <div class="card-item__label">Влажность</div>
                <div class="card-item__value">${info.humidity}</div>
-            </div>
-            <div class="card-table__item card-item" data-type="is_day">
-               <div class="card-item__label">Время суток </div>
-               <div class="card-item__value"></div>
             </div>
             <div class="card-table__item card-item" data-type="pressure">
                <div class="card-item__label">Давление</div>
@@ -241,7 +232,10 @@ function createDailyCards(data) {
 
    week.innerHTML = '<div class="week__wrapper"></div>';
    const cardWrapper = week.querySelector('.week__wrapper');
-
+   const currentCity = document.createElement('div');
+   currentCity.classList.add('week--city');
+   currentCity.textContent = `Погода в ${currentLocation}`;
+   week.prepend(currentCity);
    const weekDays = sortDays();
    function createCard() {
       const dataCounter = data.daily[counter];
